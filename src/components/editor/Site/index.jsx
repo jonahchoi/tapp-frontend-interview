@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { theme } from "../../../styles/theme";
+import { siteThemes } from "../../../constants/siteThemes";
 
 const Root = styled.div`
   max-width: 600px;
@@ -11,29 +12,29 @@ const Root = styled.div`
 const SiteTitle = styled.h1`
   font-size: 24px;
   font-weight: 500;
-  color: ${theme.colors.black[100]}; // Change to Secondary color
+  color: ${(props) => siteThemes[props.currentTheme].secondary}; // Change to Secondary color
   margin-bottom: 12px;
 `;
 
 const SiteDescription = styled.p`
   font-size: 16px;
   font-weight: 400;
-  color: ${theme.colors.black[80]}; // Change to Tertiary color
+  color: ${(props) => siteThemes[props.currentTheme].tertiary}; // Change to Tertiary color
 `;
 
 const DocLink = styled.a`
   text-decoration: none;
   font-weight: 500;
-  color: ${theme.colors.black[100]}; // Change to Secondary color
+  color: ${(props) => siteThemes[props.currentTheme].secondary}; // Change to Secondary color
   margin-top: 12px;
 `;
 
 /** Site preview for the Editor page */
-function Site(props) {
+function Site({ currentTheme }) {
   return (
     <Root>
-      <SiteTitle>StyleAI Frontend Interview ⭐️</SiteTitle>
-      <SiteDescription>
+      <SiteTitle currentTheme={currentTheme}>StyleAI Frontend Interview ⭐️</SiteTitle>
+      <SiteDescription currentTheme={currentTheme}>
         Congratulations on making it to the coding interview for the frontend
         developer internship at StyleAI! In this task, you will be developing a
         'styles' menu in the sidebar of a website editor. This menu will allow
@@ -41,7 +42,7 @@ function Site(props) {
         documentation aims to provide you with all the necessary information to
         complete the task successfully.
       </SiteDescription>
-      <SiteDescription>
+      <SiteDescription currentTheme={currentTheme}>
         This task is designed to test your ability to work with React
         components, manage state variables, and utilize local storage. We wish
         you the best of luck in completing this task and look forward to
@@ -50,6 +51,7 @@ function Site(props) {
       <DocLink
         target="_blank"
         href="https://github.com/tapp-ai/tapp-frontend-interview#readme"
+        currentTheme={currentTheme}
       >
         Read Task Documentation
       </DocLink>

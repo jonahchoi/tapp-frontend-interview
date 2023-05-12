@@ -56,7 +56,7 @@ function Editor() {
     <Root>
       <RootContent>
         <SiteWrapper layout>
-          <Site />
+          <Site currentTheme={currentTheme}/>
         </SiteWrapper>
         <SideBarWrapper layout>
           <Sidebar currentTheme={currentTheme} updateTheme={updateTheme} />

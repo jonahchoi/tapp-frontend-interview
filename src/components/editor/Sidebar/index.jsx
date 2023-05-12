@@ -3,6 +3,7 @@ import { theme } from "../../../styles/theme";
 import StyleIcon from '@mui/icons-material/Style';
 import { useState } from "react";
 import ColorPicker from "../ColorPicker";
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Component Styles
 
@@ -15,7 +16,7 @@ const Root = styled.div`
   justify-content: center;
 `;
 
-const ToggleMenuButton = styled.button`
+const ToggleMenuButton = styled(motion.button)`
   height: 50px;
   width: 50px;
   background-color: ${(props) => props.backgroundColor};
@@ -25,6 +26,7 @@ const ToggleMenuButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 `
 
 const Menu = styled.div`
@@ -61,12 +63,14 @@ const MenuColorCircleWrapper = styled.div`
   height: 100%;
 `
 
-const MenuColorCircle = styled.div`
+const MenuColorCircle = styled(motion.div)`
   height: ${(props) => props.size === 'large' ? '30px' : '15px'};
   width: ${(props) => props.size === 'large' ? '30px' : '15px'};
   border-radius: 50%;
   background-color: ${(props) => props.themeColor};
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  cursor: pointer;
+  border: ${(props) => props.selected ? '3px solid red' : 'none'}
 `
 
 const MenuThemePicker = styled.button`
@@ -83,9 +87,10 @@ const MenuThemePicker = styled.button`
   border: none;
   z-index: 20;
   position: relative;
+  cursor: pointer;
 `
 
-const MenuThemeDropdown = styled.div`
+const MenuThemeDropdown = styled(motion.div)`
   background-color: ${theme.colors.black[5]};
   border: 1px solid ${theme.colors.black[40]};
   border-radius: 8px;
@@ -103,6 +108,7 @@ const MenuThemeDropdown = styled.div`
 `
 
 const MenuThemeOption = styled.div`
+  color: ${theme.colors.black[200]};
   background-color: ${theme.colors.black[5]};
   height: 2rem;
   padding: 0 10px;
@@ -110,6 +116,7 @@ const MenuThemeOption = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
 
   &:hover {
     background-color: ${theme.colors.black[40]};
@@ -125,12 +132,6 @@ function Sidebar({ currentTheme, updateTheme, customThemes, setNewColor }) {
   const [colorPickerIsOpen, setColorPickerIsOpen] = useState(false);
 
   const [currentType, setCurrentType] = useState(null);
-
-  // useEffect(() => {
-  //   if (currentType) {
-  //     openColorPicker()
-  //   }
-  // }, [currentType])
 
   const toggleMenu = () => {
     setMenuIsOpen(!menuIsOpen);
@@ -161,10 +162,17 @@ function Sidebar({ currentTheme, updateTheme, customThemes, setNewColor }) {
           closeColorPicker();
         }}
         backgroundColor={menuIsOpen ? customThemes[currentTheme].primary : 'transparent'}
+        whileHover={{
+          scale: 1.1,
+          transition: { duration: 0.3 },
+        }}
+        whileTap={{ scale: 0.9 }}
+        // Reviewed different gestures here: https://www.framer.com/motion/gestures/
       >
         <StyleIcon fontSize='large' />
       </ToggleMenuButton>
-      {menuIsOpen && <Menu>
+      {menuIsOpen &&
+      <Menu>
         <MenuTitle>Site Styles</MenuTitle>
         <MenuSubTitle>Theme</MenuSubTitle>
         <MenuThemePicker
@@ -176,49 +184,66 @@ function Sidebar({ currentTheme, updateTheme, customThemes, setNewColor }) {
           onClick={toggleDropdown}
         >
           {currentTheme[0].toUpperCase() + currentTheme.slice(1)}
-          {dropdownIsOpen && <MenuThemeDropdown>
-            {Object.entries(customThemes).map(([name, colors]) => (
-              <MenuThemeOption key={name} value={name} onClick={()=> {
-                updateTheme(name);
-                closeColorPicker();
-              }}>
-                {name[0].toUpperCase() + name.slice(1)}
-                <MenuColorCircleWrapper>
-                  <MenuColorCircle themeColor={colors.primary} size='small' />
-                  <MenuColorCircle themeColor={colors.secondary} size='small' />
-                  <MenuColorCircle themeColor={colors.tertiary} size='small' />
-                </MenuColorCircleWrapper>
-              </MenuThemeOption>))}
-          </MenuThemeDropdown>}
+          {/* https://www.framer.com/motion/animate-presence/ */}
+          <AnimatePresence>
+            {dropdownIsOpen &&
+            <MenuThemeDropdown
+              key="dropdown"
+              animate={{
+                height:90
+              }}
+              initial={{
+                height: 0
+              }}
+              exit={{
+                height: 0
+              }}
+            >
+              {Object.entries(customThemes).map(([name, colors]) => (
+                <MenuThemeOption key={name} value={name} onClick={()=> {
+                  updateTheme(name);
+                  closeColorPicker();
+                }}>
+                  {name[0].toUpperCase() + name.slice(1)}
+                  <MenuColorCircleWrapper>
+                    <MenuColorCircle themeColor={colors.primary} size='small' />
+                    <MenuColorCircle themeColor={colors.secondary} size='small' />
+                    <MenuColorCircle themeColor={colors.tertiary} size='small' />
+                  </MenuColorCircleWrapper>
+                </MenuThemeOption>))}
+            </MenuThemeDropdown>}
+          </AnimatePresence>
         </MenuThemePicker>
         <MenuSubTitle>Theme Colors</MenuSubTitle>
         <MenuColorCircleWrapper>
-          <MenuColorCircle
-            themeColor={customThemes[currentTheme].primary}
-            size='large'
-            onClick={() => {
-              setCurrentType('primary');
-              openColorPicker();
-            }}
-          />
-          <MenuColorCircle
-            themeColor={customThemes[currentTheme].secondary}
-            size='large'
-            onClick={() => {
-              setCurrentType('secondary');
-              openColorPicker();
-            }}
-          />
-          <MenuColorCircle
-            themeColor={customThemes[currentTheme].tertiary}
-            size='large'
-            onClick={() => {
-              setCurrentType('tertiary');
-              openColorPicker();
-            }}
-          />
+          {['primary', 'secondary', 'tertiary'].map((type) => (
+            <MenuColorCircle
+              key={type}
+              themeColor={customThemes[currentTheme][type]}
+              size='large'
+              onClick={() => {
+                if (currentType === type && colorPickerIsOpen) {
+                  closeColorPicker();
+                  return;
+                }
+                setCurrentType(type);
+                openColorPicker();
+              }}
+              selected={currentType === type && colorPickerIsOpen}
+              whileHover={{
+                borderRadius: 0
+              }}
+              whileTap={{
+                scale: 0.9
+              }}
+            />
+          ))}
         </MenuColorCircleWrapper>
-        {colorPickerIsOpen && <ColorPicker color={customThemes[currentTheme][currentType]} onChange={(color) => setNewColor(color, currentTheme, currentType)} />}
+        <ColorPicker
+          color={customThemes[currentTheme]?.[currentType]}
+          onChange={(color) => setNewColor(color, currentTheme, currentType)}
+          colorPickerIsOpen={colorPickerIsOpen}
+        />
       </Menu>}
     </Root>
   );

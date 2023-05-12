@@ -1,15 +1,24 @@
 import { HexColorPicker, HexColorInput } from "react-colorful";
 import styled from "styled-components";
 import { theme } from "../../../styles/theme";
+import { AnimatePresence, motion } from 'framer-motion';
 
 //Referencing https://www.npmjs.com/package/react-colorful for implementation
 //https://codesandbox.io/s/react-colorful-customization-demo-forked-cg6x8x?file=/src/styles.css:396-431 for styling
 
-const ColorPickerWrapper = styled.div`
+const Root = styled.div`
   position: absolute;
   right: 105%;
   top: 0;
   width: 300px;
+  height: 400px;
+  overflow: hidden;
+  `
+
+const ColorPickerWrapper = styled(motion.div)`
+  position: absolute;
+  height: fit-content;
+  width: 100%;
   padding: 15px;
   border: 1px solid ${theme.colors.black[40]};
   border-radius: 8px;
@@ -52,13 +61,30 @@ const StyledHexColorInput = styled(HexColorInput)`
   margin-top: 10px;
 `
 
-function ColorPicker({ color, onChange }) {
+function ColorPicker({ color, onChange, colorPickerIsOpen }) {
 
   return (
-    <ColorPickerWrapper>
-      <StyledHexColorPicker color={color} onChange={onChange} />
-      <StyledHexColorInput color={color} onChange={onChange} prefixed/>
-    </ColorPickerWrapper>
+    <Root>
+      <AnimatePresence>
+        {colorPickerIsOpen &&
+          <ColorPickerWrapper
+            initial={{
+              left: '100%'
+            }}
+            animate={{
+              // width: 300
+              left: 0
+            }}
+            exit={{
+              left: '100%'
+            }}
+          >
+            <StyledHexColorPicker color={color} onChange={onChange} />
+            <StyledHexColorInput color={color} onChange={onChange} prefixed/>
+          </ColorPickerWrapper>
+        }
+      </AnimatePresence>
+    </Root>
   )
 }
 

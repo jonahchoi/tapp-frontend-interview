@@ -19,7 +19,7 @@ const Root = styled.div`
 const ToggleMenuButton = styled(motion.button)`
   height: 50px;
   width: 50px;
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${(props) => props.backgroundcolor};
   border-radius: 8px;
   border: none;
   overflow: hidden;
@@ -78,7 +78,7 @@ const MenuThemePicker = styled.button`
   width: 100%;
   border-radius: 8px;
   color: ${(props) => props.textColor};
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${(props) => props.backgroundcolor};
   font-size: 14px;
   font-weight: normal;
   margin-bottom: 10px;
@@ -161,7 +161,7 @@ function Sidebar({ currentTheme, updateTheme, customThemes, setNewColor }) {
           closeDropdown();
           closeColorPicker();
         }}
-        backgroundColor={menuIsOpen ? customThemes[currentTheme].primary : 'transparent'}
+        backgroundcolor={menuIsOpen ? customThemes[currentTheme].primary : 'transparent'}
         whileHover={{
           scale: 1.1,
           transition: { duration: 0.3 },
@@ -179,7 +179,7 @@ function Sidebar({ currentTheme, updateTheme, customThemes, setNewColor }) {
           id='theme'
           name='theme'
           defaultValue={'default'}
-          backgroundColor={customThemes[currentTheme].primary}
+          backgroundcolor={customThemes[currentTheme].primary}
           textColor={customThemes[currentTheme].secondary}
           onClick={toggleDropdown}
         >

@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { theme } from "../../../styles/theme";
-import { siteThemes } from "../../../constants/siteThemes";
 import StyleIcon from '@mui/icons-material/Style';
 import { useState } from "react";
+import ColorPicker from "../ColorPicker";
 
 // Component Styles
 
@@ -112,16 +112,25 @@ const MenuThemeOption = styled.div`
   align-items: center;
 
   &:hover {
-    background-color: ${theme.colors.black[40]}
+    background-color: ${theme.colors.black[40]};
   }
 `
 //https://styled-components.com/docs/basics#styling-any-component
 //Referencing how to select pseudoselectors
 
 /** Sidebar view of the Editor page */
-function Sidebar({ currentTheme, updateTheme }) {
+function Sidebar({ currentTheme, updateTheme, customThemes, setNewColor }) {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
+  const [colorPickerIsOpen, setColorPickerIsOpen] = useState(false);
+
+  const [currentType, setCurrentType] = useState(null);
+
+  // useEffect(() => {
+  //   if (currentType) {
+  //     openColorPicker()
+  //   }
+  // }, [currentType])
 
   const toggleMenu = () => {
     setMenuIsOpen(!menuIsOpen);
@@ -135,14 +144,23 @@ function Sidebar({ currentTheme, updateTheme }) {
     setDropdownIsOpen(false);
   }
 
+  const openColorPicker = () => {
+    setColorPickerIsOpen(true);
+  }
+
+  const closeColorPicker = () => {
+    setColorPickerIsOpen(false);
+  }
+
   return (
     <Root>
       <ToggleMenuButton
         onClick={() => {
           toggleMenu();
           closeDropdown();
+          closeColorPicker();
         }}
-        backgroundColor={menuIsOpen ? siteThemes[currentTheme].primary : 'transparent'}
+        backgroundColor={menuIsOpen ? customThemes[currentTheme].primary : 'transparent'}
       >
         <StyleIcon fontSize='large' />
       </ToggleMenuButton>
@@ -153,14 +171,17 @@ function Sidebar({ currentTheme, updateTheme }) {
           id='theme'
           name='theme'
           defaultValue={'default'}
-          backgroundColor={siteThemes[currentTheme].primary}
-          textColor={siteThemes[currentTheme].secondary}
+          backgroundColor={customThemes[currentTheme].primary}
+          textColor={customThemes[currentTheme].secondary}
           onClick={toggleDropdown}
         >
           {currentTheme[0].toUpperCase() + currentTheme.slice(1)}
           {dropdownIsOpen && <MenuThemeDropdown>
-            {Object.entries(siteThemes).map(([name, colors]) => (
-              <MenuThemeOption value={name} onClick={()=>updateTheme(name)}>
+            {Object.entries(customThemes).map(([name, colors]) => (
+              <MenuThemeOption key={name} value={name} onClick={()=> {
+                updateTheme(name);
+                closeColorPicker();
+              }}>
                 {name[0].toUpperCase() + name.slice(1)}
                 <MenuColorCircleWrapper>
                   <MenuColorCircle themeColor={colors.primary} size='small' />
@@ -172,10 +193,32 @@ function Sidebar({ currentTheme, updateTheme }) {
         </MenuThemePicker>
         <MenuSubTitle>Theme Colors</MenuSubTitle>
         <MenuColorCircleWrapper>
-          <MenuColorCircle themeColor={siteThemes[currentTheme].primary} size='large'/>
-          <MenuColorCircle themeColor={siteThemes[currentTheme].secondary} size='large'/>
-          <MenuColorCircle themeColor={siteThemes[currentTheme].tertiary} size='large'/>
+          <MenuColorCircle
+            themeColor={customThemes[currentTheme].primary}
+            size='large'
+            onClick={() => {
+              setCurrentType('primary');
+              openColorPicker();
+            }}
+          />
+          <MenuColorCircle
+            themeColor={customThemes[currentTheme].secondary}
+            size='large'
+            onClick={() => {
+              setCurrentType('secondary');
+              openColorPicker();
+            }}
+          />
+          <MenuColorCircle
+            themeColor={customThemes[currentTheme].tertiary}
+            size='large'
+            onClick={() => {
+              setCurrentType('tertiary');
+              openColorPicker();
+            }}
+          />
         </MenuColorCircleWrapper>
+        {colorPickerIsOpen && <ColorPicker color={customThemes[currentTheme][currentType]} onChange={(color) => setNewColor(color, currentTheme, currentType)} />}
       </Menu>}
     </Root>
   );

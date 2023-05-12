@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import { theme } from "../../../styles/theme";
-import { siteThemes } from "../../../constants/siteThemes";
 
 const Root = styled.div`
   max-width: 600px;
@@ -12,29 +10,29 @@ const Root = styled.div`
 const SiteTitle = styled.h1`
   font-size: 24px;
   font-weight: 500;
-  color: ${(props) => siteThemes[props.currentTheme].secondary}; // Change to Secondary color
+  color: ${(props) => props.color}; // Change to Secondary color
   margin-bottom: 12px;
 `;
 
 const SiteDescription = styled.p`
   font-size: 16px;
   font-weight: 400;
-  color: ${(props) => siteThemes[props.currentTheme].tertiary}; // Change to Tertiary color
+  color: ${(props) => props.color}; // Change to Tertiary color
 `;
 
 const DocLink = styled.a`
   text-decoration: none;
   font-weight: 500;
-  color: ${(props) => siteThemes[props.currentTheme].secondary}; // Change to Secondary color
+  color: ${(props) => props.color}; // Change to Secondary color
   margin-top: 12px;
 `;
 
 /** Site preview for the Editor page */
-function Site({ currentTheme }) {
+function Site({ currentTheme, customThemes }) {
   return (
     <Root>
-      <SiteTitle currentTheme={currentTheme}>StyleAI Frontend Interview ⭐️</SiteTitle>
-      <SiteDescription currentTheme={currentTheme}>
+      <SiteTitle color={customThemes[currentTheme].secondary}>StyleAI Frontend Interview ⭐️</SiteTitle>
+      <SiteDescription color={customThemes[currentTheme].tertiary}>
         Congratulations on making it to the coding interview for the frontend
         developer internship at StyleAI! In this task, you will be developing a
         'styles' menu in the sidebar of a website editor. This menu will allow
@@ -42,7 +40,7 @@ function Site({ currentTheme }) {
         documentation aims to provide you with all the necessary information to
         complete the task successfully.
       </SiteDescription>
-      <SiteDescription currentTheme={currentTheme}>
+      <SiteDescription color={customThemes[currentTheme].tertiary}>
         This task is designed to test your ability to work with React
         components, manage state variables, and utilize local storage. We wish
         you the best of luck in completing this task and look forward to
@@ -51,7 +49,7 @@ function Site({ currentTheme }) {
       <DocLink
         target="_blank"
         href="https://github.com/tapp-ai/tapp-frontend-interview#readme"
-        currentTheme={currentTheme}
+        color={customThemes[currentTheme].secondary}
       >
         Read Task Documentation
       </DocLink>

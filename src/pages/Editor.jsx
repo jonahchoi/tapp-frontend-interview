@@ -3,8 +3,9 @@ import { motion } from "framer-motion";
 import { theme } from "../styles/theme";
 import Sidebar from "../components/editor/Sidebar";
 import Site from "../components/editor/Site";
-import { useEffect, useState } from 'react';
 import useLocalStorage from "../utils/useLocalStorage";
+import { siteThemes } from "../constants/siteThemes";
+import { useState } from "react";
 // Component Styles
 
 const Root = styled.div`
@@ -33,7 +34,7 @@ const SiteWrapper = styled(motion.div)`
   overflow: hidden;
   border: 1px solid ${theme.colors.black[40]};
   border-radius: 8px;
-  background-color: ${theme.colors.black[10]}; // Change to Primary color
+  background-color: ${(props) => props.bgcolor}; // Change to Primary color
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,14 +53,29 @@ function Editor() {
     setCurrentTheme(newTheme);
   }
 
+  const [customThemes, setCustomThemes] = useState(siteThemes);
+
+  const setNewColor = (newColor, theme, type) => {
+    setCustomThemes((oldThemes) => {
+      let newThemes = {
+        ...oldThemes,
+      }
+      newThemes[theme] = {
+        ...newThemes[theme],
+      };
+      newThemes[theme][type] = newColor;
+      return newThemes;
+    })
+  }
+
   return (
     <Root>
       <RootContent>
-        <SiteWrapper layout>
-          <Site currentTheme={currentTheme}/>
+        <SiteWrapper layout bgcolor={customThemes[currentTheme].primary}>
+          <Site currentTheme={currentTheme} customThemes={customThemes} />
         </SiteWrapper>
         <SideBarWrapper layout>
-          <Sidebar currentTheme={currentTheme} updateTheme={updateTheme} />
+          <Sidebar currentTheme={currentTheme} updateTheme={updateTheme} customThemes={customThemes} setNewColor={setNewColor} />
         </SideBarWrapper>
       </RootContent>
     </Root>

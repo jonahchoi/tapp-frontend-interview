@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { theme } from "../styles/theme";
 import Sidebar from "../components/editor/Sidebar";
 import Site from "../components/editor/Site";
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import useLocalStorage from "../utils/useLocalStorage";
 // Component Styles
 
 const Root = styled.div`
@@ -46,7 +46,7 @@ const SideBarWrapper = styled(motion.div)`
 
 /** Root Editor View */
 function Editor() {
-  const [currentTheme, setCurrentTheme] = useState('default');
+  const [currentTheme, setCurrentTheme] = useLocalStorage();
 
   const updateTheme = (newTheme) => {
     setCurrentTheme(newTheme);

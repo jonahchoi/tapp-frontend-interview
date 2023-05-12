@@ -33,7 +33,7 @@ const Menu = styled.div`
   left: -200px;
   transform: translateY(-50%);
   width: 200px;
-  padding: 20px;
+  padding: 30px 20px;
   z-index: 10;
   border: 1px solid ${theme.colors.black[40]};
   border-radius: 8px;
@@ -51,13 +51,14 @@ const MenuTitle = styled.h1`
 const MenuSubTitle = styled.h2`
   font-size: 14px;
   font-weight: normal;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 `
 
 const MenuColorCircleWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
+  height: 100%;
 `
 
 const MenuColorCircle = styled.div`
@@ -76,7 +77,7 @@ const MenuThemePicker = styled.button`
   background-color: ${(props) => props.backgroundColor};
   font-size: 14px;
   font-weight: normal;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
   text-align: start;
   padding-left: 10px;
   border: none;
@@ -93,6 +94,12 @@ const MenuThemeDropdown = styled.div`
   width: 100%;
   left: 0;
   top: 100%;
+  height: 90px;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  } //https://stackoverflow.com/questions/16670931/hide-scroll-bar-but-while-still-being-able-to-scroll
 `
 
 const MenuThemeOption = styled.div`

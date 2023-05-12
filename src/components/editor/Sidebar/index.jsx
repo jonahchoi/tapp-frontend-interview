@@ -67,7 +67,7 @@ const MenuColorCircle = styled(motion.div)`
   height: ${(props) => props.size === 'large' ? '30px' : '15px'};
   width: ${(props) => props.size === 'large' ? '30px' : '15px'};
   border-radius: 50%;
-  background-color: ${(props) => props.themeColor};
+  background-color: ${(props) => props.themecolor};
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   cursor: pointer;
   border: ${(props) => props.selected ? '3px solid red' : 'none'}
@@ -206,9 +206,9 @@ function Sidebar({ currentTheme, updateTheme, customThemes, setNewColor }) {
                 }}>
                   {name[0].toUpperCase() + name.slice(1)}
                   <MenuColorCircleWrapper>
-                    <MenuColorCircle themeColor={colors.primary} size='small' />
-                    <MenuColorCircle themeColor={colors.secondary} size='small' />
-                    <MenuColorCircle themeColor={colors.tertiary} size='small' />
+                    <MenuColorCircle themecolor={colors.primary} size='small' />
+                    <MenuColorCircle themecolor={colors.secondary} size='small' />
+                    <MenuColorCircle themecolor={colors.tertiary} size='small' />
                   </MenuColorCircleWrapper>
                 </MenuThemeOption>))}
             </MenuThemeDropdown>}
@@ -219,7 +219,7 @@ function Sidebar({ currentTheme, updateTheme, customThemes, setNewColor }) {
           {['primary', 'secondary', 'tertiary'].map((type) => (
             <MenuColorCircle
               key={type}
-              themeColor={customThemes[currentTheme][type]}
+              themecolor={customThemes[currentTheme][type]}
               size='large'
               onClick={() => {
                 if (currentType === type && colorPickerIsOpen) {
